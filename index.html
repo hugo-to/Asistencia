@@ -10,7 +10,7 @@
 <body>
     <h1>App de Asistencia</h1>
     <form id="form">
-        <label for="name">Nombre:</label><br>
+        <label for="name">Nombre del Alumno:</label><br>
         <input type="text" id="name" name="name"><br><br>
         <input type="submit" value="Agregar">
     </form>
@@ -77,7 +77,7 @@
                 <td>${member.name}</td>
                 <td><input type="checkbox" ${member.paid ? 'checked' : ''}></td>
                 <td><input type="checkbox" ${member.attended ? 'checked' : ''}></td>
-                <td><button class="delete">Eliminar</button></td>`;
+                <td><button class="delete">X</button></td>`;
             
             table.appendChild(row);
         }
