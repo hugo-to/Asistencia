@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>App de Asistencia</title>
+</head>
+<body>
+    <h1>App de Asistencia</h1>
+    <form id="form">
+        <label for="name">Nombre:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+        <input type="submit" value="Agregar">
+    </form>
+    <br><br>
+
+    <table id="table">
+        <tr>
+            <th>Nombre</th>
+            <th>Pagó</th>
+            <th>Asistió</th>
+            <th></th>
+        </tr>
+    </table>
+
+    <script type="text/javascript">
+        const form = document.querySelector('#form');
+        const table = document.querySelector('#table');
+        
+        let members = JSON.parse(localStorage.getItem('members')) || [];
+        
+        members.forEach(member => {
+            addRow(member);
+        });
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = form.name.value;
+            form.name.value = '';
+        
+            const member = { name, paid: false, attended: false };
+            members.push(member);
+            localStorage.setItem('members', JSON.stringify(members));
+        
+            addRow(member);
+        });
+        
+        table.addEventListener('click', (e) => {
+            if(e.target.classList.contains('delete')) {
+                const row = e.target.parentElement.parentElement;
+                const index = [...row.parentElement.children].indexOf(row) - 1;
+                members.splice(index, 1);
+                localStorage.setItem('members', JSON.stringify(members));
+                row.remove();
+            }
+            
+            if(e.target.type === 'checkbox') {
+                const row = e.target.parentElement.parentElement;
+                const index = [...row.parentElement.children].indexOf(row) - 1;
+                
+                if(e.target.parentElement.cellIndex === 1) {
+                    members[index].paid = e.target.checked;
+                    localStorage.setItem('members', JSON.stringify(members));
+                } else if(e.target.parentElement.cellIndex === 2) {
+                    members[index].attended = e.target.checked;
+                    localStorage.setItem('members', JSON.stringify(members));
+                }
+            }
+        });
+        
+        function addRow(member) {
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${member.name}</td>
+                <td><input type="checkbox" ${member.paid ? 'checked' : ''}></td>
+                <td><input type="checkbox" ${member.attended ? 'checked' : ''}></td>
+                <td><button class="delete">Eliminar</button></td>`;
+            
+            table.appendChild(row);
+        }
+    </script>
+
+</body>
+
+</html>
